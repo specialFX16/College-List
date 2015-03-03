@@ -1,0 +1,90 @@
+package com.example.collegelist;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends Activity {
+	
+	//Activity Global variables; Try to keep globals to minimum
+	private List<ItemForSale>forSaleList = new ArrayList<ItemForSale>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        
+        populateListOfItems();
+        populateListView();
+    }
+
+
+    // populate the list of items with what in in the list 
+    private void populateListOfItems(){
+    	forSaleList.add(new ItemForSale("First Couch","This is the desc for the first one", R.drawable.test_couch1));
+    	forSaleList.add(new ItemForSale("Second Couch","This is the desc for the second one", R.drawable.test_couch2));
+    	forSaleList.add(new ItemForSale("Third Couch","This is the desc for the third one", R.drawable.test_couch3));
+    	forSaleList.add(new ItemForSale("Fourth Couch","This is the desc for the fourth one", R.drawable.test_couch4));
+    	
+    }
+    
+    
+    private void populateListView(){
+    	ArrayAdapter<ItemForSale> adapter = new MyListAdapter();
+    	ListView list = (ListView) findViewById(R.id.list_view_main);
+    	list.setAdapter(adapter);
+    }
+    
+    private class MyListAdapter extends ArrayAdapter<ItemForSale>{
+    	public MyListAdapter(){
+    		super(MainActivity.this, R.layout.list_view_card, forSaleList);
+    	}
+    	
+    	@Override
+    	public View getView(int position, View convertView, ViewGroup parent){
+    		
+    		// Make sure we have a view to work with may have been given null
+    		View itemView = convertView;
+    		if(itemView == null){
+    			itemView = getLayoutInflater().inflate(R.layout.list_view_card, parent, false);
+    		}
+    		//Find the item to work with.
+    		ItemForSale currItem = forSaleList.get(position);
+    		
+    		
+    		//Fill the view
+    		ImageView imageView = (ImageView) itemView.findViewById(R.id.main_list_image);
+    		imageView.setImageResource(currItem.getItemPictureID());
+    		
+    		TextView makeTitle =(TextView) itemView.findViewById(R.id.title_of_post);
+    		makeTitle.setText(currItem.getTitle());
+    		
+    		TextView makeDesc = (TextView) itemView.findViewById(R.id.desc_of_post);
+    		makeDesc.setText(currItem.getDescription());
+    		
+    		
+    		return itemView;
+    	}
+    }
+    
+    
+    
+    
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+    
+}
